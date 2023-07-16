@@ -1,5 +1,5 @@
 const BucketModel = require('../model/bucket.model');
-const BallModel = require('../model/ball.model');
+const BallModel = require('../model/bucket.model');
 
 class BucketServices {
 
@@ -17,12 +17,12 @@ class BucketServices {
         const bucketData = await BucketModel.findOne({name:bucketName});
         const ballData = await BallModel.findOne({name:ballName});
 
-        if((bucketData.availableVol - ballData.vol) >= 0 ){
+        if(bucketData.availableVol >= 0){
                     bucketData.availableVol = bucketData.availableVol - ballData.vol;
                     bucketData.filled.push(ballName);
                     return await bucketData.save();
         }
-        return "No Space Available";
+        return "No Space Available"
     }
 }
 
