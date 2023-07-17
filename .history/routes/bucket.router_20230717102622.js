@@ -4,7 +4,7 @@ const BucketServices = require('../services/bucket.services');
 router.post('/createBucket',async (req,res,next)=>{
     try {
         const response = await BucketServices.createBucket(req.body.name,req.body.vol);
-        console.log("---->",response);
+
         res.json({ status: true, success: response });
     } catch (err) {
         console.log("---> err -->", err);
@@ -16,7 +16,7 @@ router.post('/createBucket',async (req,res,next)=>{
 router.post('/createBall',async (req,res,next)=>{
     try {
         const response = await BucketServices.createBall(req.body.name,req.body.vol);
-        console.log("---->",response);
+
         res.json({ status: true, success: response });
     } catch (err) {
         console.log("---> err -->", err);

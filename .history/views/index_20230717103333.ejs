@@ -68,16 +68,11 @@
       </tr>
     </thead>
     <tbody>
-      <% buckets.forEach(bucket=> { %>
+      <% buckets.forEach(bucket => { %>
         <tr>
-          <td>
-            <%= bucket.name %>
-          </td>
-          <td>
-            <%= bucket.vol %>
-          </td>
-          <td>
-            <%= bucket.filled.join(', ') %></td>
+          <td><%= bucket.name %></td>
+          <td><%= bucket.vol %></td>
+          <td><%= bucket.filled.join(', ') %></td>
           <td><%= bucket.createdAt.toLocaleString() %></td>
           <td><%= bucket.updatedAt.toLocaleString() %></td>
         </tr>
@@ -91,17 +86,19 @@
       <tr>
         <th>Name</th>
         <th>Volume</th>
+        <th>Filled</th>
         <th>Created At</th>
         <th>Updated At</th>
       </tr>
     </thead>
     <tbody>
-      <% balls.forEach(ball => { %>
+      <% buckets.forEach(bucket => { %>
         <tr>
-          <td><%= ball.name %></td>
-          <td><%= ball.vol %></td>
-          <td><%= ball.createdAt.toLocaleString() %></td>
-          <td><%= ball.updatedAt.toLocaleString() %></td>
+          <td><%= bucket.name %></td>
+          <td><%= bucket.vol %></td>
+          <td><%= bucket.filled.join(', ') %></td>
+          <td><%= bucket.createdAt.toLocaleString() %></td>
+          <td><%= bucket.updatedAt.toLocaleString() %></td>
         </tr>
       <% }); %>
     </tbody>
@@ -124,16 +121,13 @@
       });
 
       // Make a POST request to the backend API
-      axios.post(' http://localhost:3000/createBucket', jsonData).then(response => {
-        // Handle the API response
-        const formId = form.id;
-        const responseElement = document.getElementById(`${formId}-response`);
-        responseElement.textContent = response.data.message;
-
-        setTimeout(() => {
-          location.reload();
-        }, 1000);
-      })
+      axios.post('http://localhost:3000/createBucket', jsonData)
+        .then(response => {
+          // Handle the API response
+          const formId = form.id;
+          const responseElement = document.getElementById(`${formId}-response`);
+          responseElement.textContent = response.data.message;
+        })
         .catch(error => {
           console.error(error); // Handle any errors
         });
@@ -159,9 +153,6 @@
           const formId = form.id;
           const responseElement = document.getElementById(`${formId}-response`);
           responseElement.textContent = response.data.message;
-          setTimeout(() => {
-            location.reload();
-          }, 1000);
         })
         .catch(error => {
           console.error(error); // Handle any errors
@@ -188,9 +179,6 @@
           const formId = form.id;
           const responseElement = document.getElementById(`${formId}-response`);
           responseElement.textContent = response.data.message;
-          setTimeout(() => {
-            location.reload();
-          }, 1000);
         })
         .catch(error => {
           console.error(error); // Handle any errors

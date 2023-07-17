@@ -21,12 +21,13 @@ app.use("/", (req, res) => {
       BallModel.find({})
         .then((balls) => {
           // Render the HTML template with the fetched data
-          res.render('index', { buckets, balls });
+          res.render('index', { buckets,balls });
         })
         .catch((err) => {
           console.error(err);
           res.status(500).send('Internal Server Error');
         });
+      res.render('index', { buckets });
     })
     .catch((err) => {
       console.error(err);

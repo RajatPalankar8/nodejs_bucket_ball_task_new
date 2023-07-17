@@ -12,27 +12,20 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(`${__dirname}/public`));
 
 
-app.use("/", bucketRouter);
+app.use("/",bucketRouter);
 
 app.use("/", (req, res) => {
-  BucketModel.find({})
-    .then((buckets) => {
-      // Render the HTML template with the fetched data
-      BallModel.find({})
-        .then((balls) => {
-          // Render the HTML template with the fetched data
-          res.render('index', { buckets, balls });
-        })
-        .catch((err) => {
-          console.error(err);
-          res.status(500).send('Internal Server Error');
-        });
-    })
-    .catch((err) => {
+  BucketModel.find({}, (err, buckets) => {
+    if (err) {
       console.error(err);
       res.status(500).send('Internal Server Error');
-    });
-});
+      return;
+    }
+
+    // Render the HTML template with the fetched data
+    res.render('index', { buckets });
+  })
+  });
 
 
 module.exports = app;
