@@ -18,11 +18,6 @@ class BucketServices {
         return addBall;
     }
 
-    static async getBucket() {
-        const addBall = await BucketModel.find({});
-        return addBall;
-    }
-
     static async fillBucket(bucketName, ballName) {
         const bucketData = await BucketModel.findOne({ name: bucketName });
         const ballData = await BallModel.findOne({ name: ballName });
@@ -36,21 +31,17 @@ class BucketServices {
     }
 
     static async bulkUpload(data) {
-        try{
-            for (let i = 0; i < data.balls.length; i++) {
-                const bucketData = await BucketModel.findOne({ name: data.bucketName });
-                const ballData = await BallModel.findOne({ name: data.balls[i].ball });
-                if ((bucketData.availableVol - ballData.vol) >= 0) {
-                    bucketData.availableVol = bucketData.availableVol - ballData.vol;
-                    bucketData.filled.push(data.balls[i].ball);
-                     await bucketData.save();
-                }
+        const bucketData = await BucketModel.findOne({ name: data.bucketName });
+        console.log("data--->",data);
+        for (const item of data.balls) {
+            const ballData = await BallModel.findOne({ name: item.ball });
+            if ((bucketData.availableVol - ballData.vol) >= 0) {
+                bucketData.availableVol = bucketData.availableVol - ballData.vol;
+                bucketData.filled.push(ballName);
+                return await bucketData.save();
             }
-            
-        }catch(err){
-            console.log("err--->", err);
         }
-        
+        return "No Space Available";
     }
 }
 

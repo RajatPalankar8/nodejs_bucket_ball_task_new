@@ -46,17 +46,6 @@ router.post('/getBallList',async (req,res,next)=>{
     }
 });
 
-router.post('/getBucketList',async (req,res,next)=>{
-    try {
-        const response = await BucketServices.getBucket();
-        //console.log("---->",response);
-        res.json({ status: true, success: response });
-    } catch (err) {
-        console.log("---> err -->", err);
-        next(err);
-    }
-});
-
 router.post('/bulkFillBall',async (req,res,next)=>{
     try {
          const response = await BucketServices.bulkUpload(req.body);

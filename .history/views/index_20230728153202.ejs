@@ -60,7 +60,7 @@
   <h2>Select Balls and Enter Bucket Name</h2>
   <form id="ballForm">
     <label for="bucketName">Bucket Name:</label>
-    <!-- <input type="text" id="bucketName" name="bucketName"><br><br> -->
+    <input type="text" id="bucketName" name="bucketName"><br><br>
     <select id="bucketNameSelect" name="bucketNameSelect">
       <!-- The "Bucket Name" dropdown options will be dynamically added here -->
     </select>
@@ -286,7 +286,7 @@ console.log("bucketNameSelect--->",bucketNameSelect.value);
     // Collect form data and arrange it in an array
     const formData = new FormData(form);
     const data = {
-      bucketName: bucketNameSelect.value,
+      bucketName: formData.get('bucketName'),
       balls: [],
     };
 

@@ -18,11 +18,6 @@ class BucketServices {
         return addBall;
     }
 
-    static async getBucket() {
-        const addBall = await BucketModel.find({});
-        return addBall;
-    }
-
     static async fillBucket(bucketName, ballName) {
         const bucketData = await BucketModel.findOne({ name: bucketName });
         const ballData = await BallModel.findOne({ name: ballName });

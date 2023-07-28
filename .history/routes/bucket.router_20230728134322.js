@@ -38,18 +38,7 @@ router.post('/fillBucket',async (req,res,next)=>{
 router.post('/getBallList',async (req,res,next)=>{
     try {
         const response = await BucketServices.getBall();
-        //console.log("---->",response);
-        res.json({ status: true, success: response });
-    } catch (err) {
-        console.log("---> err -->", err);
-        next(err);
-    }
-});
-
-router.post('/getBucketList',async (req,res,next)=>{
-    try {
-        const response = await BucketServices.getBucket();
-        //console.log("---->",response);
+        console.log("---->",response);
         res.json({ status: true, success: response });
     } catch (err) {
         console.log("---> err -->", err);
@@ -59,8 +48,8 @@ router.post('/getBucketList',async (req,res,next)=>{
 
 router.post('/bulkFillBall',async (req,res,next)=>{
     try {
-         const response = await BucketServices.bulkUpload(req.body);
-        //console.log("---->",req.body);
+        // const response = await BucketServices.getBall();
+        console.log("---->",req.body);
         res.json({ status: true, success: req.body });
     } catch (err) {
         console.log("---> err -->", err);

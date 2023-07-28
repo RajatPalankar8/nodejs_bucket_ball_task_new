@@ -18,11 +18,6 @@ class BucketServices {
         return addBall;
     }
 
-    static async getBucket() {
-        const addBall = await BucketModel.find({});
-        return addBall;
-    }
-
     static async fillBucket(bucketName, ballName) {
         const bucketData = await BucketModel.findOne({ name: bucketName });
         const ballData = await BallModel.findOne({ name: ballName });
@@ -37,7 +32,9 @@ class BucketServices {
 
     static async bulkUpload(data) {
         try{
+            console.log("data--->", data.balls[2].ball, data.balls.length);
             for (let i = 0; i < data.balls.length; i++) {
+                console.log("Loop--->", data.balls[i]);
                 const bucketData = await BucketModel.findOne({ name: data.bucketName });
                 const ballData = await BallModel.findOne({ name: data.balls[i].ball });
                 if ((bucketData.availableVol - ballData.vol) >= 0) {

@@ -60,10 +60,8 @@
   <h2>Select Balls and Enter Bucket Name</h2>
   <form id="ballForm">
     <label for="bucketName">Bucket Name:</label>
-    <!-- <input type="text" id="bucketName" name="bucketName"><br><br> -->
-    <select id="bucketNameSelect" name="bucketNameSelect">
-      <!-- The "Bucket Name" dropdown options will be dynamically added here -->
-    </select>
+    <input type="text" id="bucketName" name="bucketName"><br><br>
+
     <h3>Balls:</h3>
     <div id="ballList">
       <!-- Ball data from MongoDB will be dynamically added here -->
@@ -222,32 +220,30 @@
     form3.addEventListener('submit', fillBucketEvent);
   </script>
 
+
 <script>
   // Fetch balls data from the server using Axios
   axios.post('http://localhost:3000/getBallList')
     .then(response => {
-      //console.log("----------->>>>>>>", response.data.success);
+      console.log("----------->>>>>>>", response.data.success);
       createBallCheckboxes(response.data.success);
-      fetchBucketOptions();
     })
     .catch(error => console.error('Error fetching balls:', error));
 
-  // to show a list of boxes
+  // to show a list of box
   function createBallCheckboxes(balls) {
     const ballListDiv = document.getElementById('ballList');
-    
     balls.forEach(ball => {
-      console.log("Create Function ", ball);
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
-      checkbox.name = `${ball._id}`; // Each checkbox will have a unique name
-      checkbox.value = ball.name;
+      checkbox.name = 'balls';
+      checkbox.value = ball._id.$oid;
 
       const label = document.createElement('label');
       label.innerHTML = `${ball.name} (Vol: ${ball.vol}) :- &nbsp;`;
       const inputField = document.createElement('input');
       inputField.type = 'number';
-      inputField.name = `count_${ball.name}`; // Each input field will have a unique name
+      inputField.name = `ball_${ball._id.$oid}`; // Each input field will have a unique name
       inputField.placeholder = 'Number of balls';
       label.appendChild(checkbox);
       ballListDiv.appendChild(label);
@@ -257,71 +253,93 @@
     });
   }
 
-  function fetchBucketOptions() {
-    axios.post('http://localhost:3000/getBucketList') // Replace "/api/getBucketOptions" with your server's endpoint for fetching bucket options
-      .then(response => {
-        const bucketOptions = response.data.success; // Assuming the response is an array of objects with value and label properties
-        populateBucketOptions(bucketOptions);
-      })
-      .catch(error => console.error('Error fetching bucket options:', error));
-  }
-  const bucketNameSelect = document.getElementById('bucketNameSelect');
-  function populateBucketOptions(options) {
-    console.log("options-------->",options);
-    
-    options.forEach(option => {
-      console.log("options-------->",option.name);
-      const optionElement = document.createElement('option');
-      optionElement.value = option.name;
-      optionElement.textContent = option.name;
-      bucketNameSelect.appendChild(optionElement);
-    });
-  }
-
-  // Handle form submission using event delegation
+  // Handle form submission
   const form = document.getElementById('ballForm');
   form.addEventListener('submit', (event) => {
     event.preventDefault(); // Prevent default form submission behavior
-console.log("bucketNameSelect--->",bucketNameSelect.value);
+
     // Collect form data and arrange it in an array
     const formData = new FormData(form);
     const data = {
-      bucketName: bucketNameSelect.value,
+      bucketName: formData.get('bucketName'),
       balls: [],
     };
 
-    // Loop through the checkboxes and get the selected ones
-    const checkboxes = form.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
-      if (checkbox.checked) {
-        const ballId = checkbox.name;
-        const label = checkbox.value
-        const labelText = label;
-        const ballCount = formData.get(`count_${label}`);
-        data.balls.push({ _id: ballId, ball: labelText, count: ballCount });
+    // Loop through the formData entries and find values for each ball ID
+    for (const [key, value] of formData.entries()) {
+      if (key.startsWith('ball_')) {
+        const ballId = key.substring('ball_'.length); // Extract the ballId directly from the key
+        const checkboxName = `balls`;
+        const isChecked = formData.getAll(checkboxName).includes(ballId);
+
+        if (isChecked) {
+          const labelText = document.querySelector(`label[for="${checkboxName}_${ballId}"]`).innerText;
+          const ballCount = value;
+          data.balls.push({ _id: ballId, label: labelText, count: ballCount });
+        }
       }
-    });
-    // Check if at least one checkbox is checked
-    if (data.balls.length === 0) {
-      alert('Please select at least one checkbox before submitting the form.');
-      return; // Abort form submission
     }
 
     // Make POST request to the server with the JSON data for form submission
-    axios.post('http://localhost:3000/bulkFillBall', data) // Replace "/api/submitForm" with your server's endpoint for form submission
+    axios.post('/api/submitForm', data) // Replace "/api/submitForm" with your server's endpoint for form submission
       .then(response => {
         // Handle successful form submission response if needed
-       // console.log(response.data);
-      //  setTimeout(() => {
-      //       location.reload();
-      //     }, 1000);
+        console.log(response.data);
       })
       .catch(error => console.error('Error submitting form:', error));
   });
 </script>
 
 
+<script>
+  // Fetch balls data from the server using Axios - Same as before
 
+  // Handle form submission
+
+  
+  const form = document.getElementById('ballForm');
+  form.addEventListener('submit', (event) => {
+    event.preventDefault(); // Prevent default form submission behavior
+    console.log("submit clicked -----??????");
+    // Collect form data and arrange it in JSON format
+    const formData = new FormData(form);
+    const data = {
+      bucketName: formData.get('bucketName'),
+      balls: [],
+    };
+    let isCheckboxChecked = false;
+
+    for (const [key, value] of formData.entries()) {
+      if (key.startsWith('ball_')) {
+        const ballId = key.substring('ball_'.length); // Extract the ballId directly from the key
+        const checkboxName = `balls`;
+        const isChecked = formData.getAll(checkboxName).includes(ballId);
+
+        if (isChecked) {
+          isCheckboxChecked = true; // Set the flag to true if at least one checkbox is checked
+
+          // Get the label value associated with the checkbox
+          const checkbox = form.elements.namedItem(key);
+          const labelElement = document.querySelector(`label[for="${checkbox.id}"]`);
+          const labelText = labelElement.trim();
+
+          const ballCount = value;
+          data.balls.push({ _id: ballId, count: ballCount, label: labelText });
+        }
+      }
+    }
+
+    console.log("submit clicked -----Balls ",data);
+
+    // // Make POST request to the server with the JSON data for form submission
+    // axios.post('/api/submitForm', data) // Replace "/api/submitForm" with your server's endpoint for form submission
+    //   .then(response => {
+    //     // Handle successful form submission response if needed
+    //     console.log(response.data);
+    //   })
+    //   .catch(error => console.error('Error submitting form:', error));
+  });
+</script>
 </body>
 
 </html>

@@ -19,7 +19,7 @@ class BucketServices {
     }
 
     static async getBucket() {
-        const addBall = await BucketModel.find({});
+        const addBall = await BucketModell.find({});
         return addBall;
     }
 
