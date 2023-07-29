@@ -314,7 +314,7 @@ console.log("bucketNameSelect--->",bucketNameSelect.value);
       .then(response => {
         // Handle successful form submission response if needed
         console.log(response);
-       if(response.data.success == false){
+       if(response.success == false){
         alert('No More Space available');
        }
        

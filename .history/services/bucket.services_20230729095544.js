@@ -45,7 +45,7 @@ class BucketServices {
                     bucketData.filled.push(data.balls[i].ball);
                      await bucketData.save();
                 }else{
-                    return false;
+                    return "No More Space Available";
                 }
             }
             

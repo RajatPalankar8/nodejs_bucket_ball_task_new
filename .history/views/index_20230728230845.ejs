@@ -24,6 +24,8 @@
 
 <body>
   <div style="display: inline-flex;">
+
+
     <form id="form1">
       <h2>Create Bucket</h2>
       <label for="name1">Name:</label>
@@ -33,7 +35,6 @@
       <input type="submit" value="Submit">
       <p id="form1-response"></p>
     </form>
-    
     <hr>
     <form id="form2">
       <h2>Create Ball</h2>
@@ -59,6 +60,7 @@
   <h2>Select Balls and Enter Bucket Name</h2>
   <form id="ballForm">
     <label for="bucketName">Bucket Name:</label>
+    <!-- <input type="text" id="bucketName" name="bucketName"><br><br> -->
     <select id="bucketNameSelect" name="bucketNameSelect">
       <!-- The "Bucket Name" dropdown options will be dynamically added here -->
     </select>
@@ -74,7 +76,6 @@
       <tr>
         <th>Name</th>
         <th>Volume</th>
-        <th>Available</th>
         <th>Filled</th>
         <th>Created At</th>
         <th>Updated At</th>
@@ -88,9 +89,6 @@
           </td>
           <td>
             <%= bucket.vol %>
-          </td>
-          <td>
-            <%= bucket.availableVol %>
           </td>
           <td>
             <%= bucket.filled.join(', ') %></td>
@@ -313,11 +311,10 @@ console.log("bucketNameSelect--->",bucketNameSelect.value);
     axios.post('http://localhost:3000/bulkFillBall', data) // Replace "/api/submitForm" with your server's endpoint for form submission
       .then(response => {
         // Handle successful form submission response if needed
-        console.log(response);
-       if(response.data.success == false){
-        alert('No More Space available');
-       }
-       
+       // console.log(response.data);
+      //  setTimeout(() => {
+      //       location.reload();
+      //     }, 1000);
       })
       .catch(error => console.error('Error submitting form:', error));
   });

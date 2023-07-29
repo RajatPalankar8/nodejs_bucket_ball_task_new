@@ -44,8 +44,6 @@ class BucketServices {
                     bucketData.availableVol = bucketData.availableVol - (ballData.vol * data.balls[i].count);
                     bucketData.filled.push(data.balls[i].ball);
                      await bucketData.save();
-                }else{
-                    return false;
                 }
             }
             
